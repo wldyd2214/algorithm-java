@@ -38,10 +38,11 @@ class Solution {
         String[] tickets = { "A 1", "B 2", "C 5", "D 3" };
         int roll = 10;
         String[][] shop = { {"B", "C", "B", "C"}, {"A", "A", "A", "B"}, {"D", "D", "C", "D"} };
-        int money = 30;
+        int money = 100;
 
-        Solution solution = new Solution();
-        solution.solution(tickets, roll, shop, money);
+        Solution object = new Solution();
+
+        System.out.println("출력 => " + object.solution(tickets, roll, shop, money));
     }
 
     public int solution(String[] tickets, int roll, String[][] shop, int money) {
@@ -49,17 +50,26 @@ class Solution {
 
         Map<String, Integer> ticketPrices = new HashMap<>();
 
+        // 티켓의 이름과 가격을 저장
         for (String ticket : tickets) {
-            String name = ticket.trim().substring(0, ticket.length() - 1);
-            int price = Integer.parseInt(ticket.trim().substring(ticket.length() - 1));
+            // trim 메소드 순서가 잘못 됨.
+            // String name = ticket.trim().substring(0, ticket.length() - 1);
+            String name = ticket.substring(0, ticket.length() - 1).trim();
+            // trim 메소드가 없어도 됨.
+            // int price = Integer.parseInt(ticket.trim().substring(ticket.length() - 1));
+            int price = Integer.parseInt(ticket.substring(ticket.length() - 1));
             ticketPrices.put(name, price);
         }
 
+        // 상점에서 골드 티켓을 살 수 있는 경우의 수를 계산
         for (String[] display : shop) {
-            int totalPrice = getTotalCost(display, ticketPrices);
-            if (totalPrice <= money) {
-                answer += totalPrice / roll;
-                money -= totalPrice;
+
+            // 해당 상점에서 살 수 있는 상품의 totalCost 구함
+            int totalCost = getTotalCost(display, ticketPrices);
+
+            if (totalCost <= money) {
+                answer += totalCost / roll;
+                money -= totalCost;
             } else {
                 int normalTicketCount = money / roll;
                 answer += normalTicketCount;
